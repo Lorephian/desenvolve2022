@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="800" height="400"></canvas>
+    <script>
+      var screen = document.querySelector('canvas')
+      var pencil = screen.getContext('2d')
+
+      const fieldSize = [800, 400]
+      const ballSize = 10
+
+      var ballSpeedX = 5
+      var ballSpeedY = 5
+
+      var startGame = true
+
+      const playerOneSizeX = 10
+      var playerOneSizeY = 100
+      const playerTwoSizeX = 10
+      var playerTwoSizeY = 100
+
+      // COORDINATES
+      var ballCoordenateX = 400
+      var ballCoordenateY = 200
+      const playerOneCoordinateX = 15
+      var playerOneCoordinateY = 150
+      const playerTwoCoordinateX = 775
+      var playerTwoCoordinateY = 150
+
+      var leftToRight = true
+      var topToBotton = true
+
+      var incrementY = 1
+      var incrementX = 1
+
+      var random = 0
+
+      //SCORE
+      var scorePlayerOne = 0
+      var scorePlayerTwo = 0
+
+      // KEYBOARD
+      const keyboardUp = 38
+      const keyboardDown = 40
+      var input = 0
+      var updateNeeded = false
+
+      //CRETAE MENU
+
+      // CREATE ALL SPRITES
+      function createNewGame() {
+        if (startGame == true) {
+          incrementX = parseInt(Math.round(Math.random() * ballSpeedX + 1))
+          incrementY = parseInt(Math.round(Math.random() * ballSpeedY + 1))
+          random = parseInt(Math.round(Math.random()))
+          if (random == 0) {
+            incrementX = incrementX * -1
+            random = parseInt(Math.round(Math.random()))
+            createBall()
+            refreshPlayers()
+          } else if (random == 1) {
+            incrementY = incrementY * -1
+            createBall()
+            refreshPlayers()
+          } else {
+            createBall()
+            refreshPlayers()
+          }
+          ballCoordenateX = 400
+          ballCoordenateY = 200
+          playerOneCoordinateY = 150
+          playerTwoCoordinateY = 150
+          createField()
+          createBall()
+          createPlayerOne()
+          createPlayerTwo()
+          moveBall()
+          startGame = false
+        }
+      }
+
+      function createField() {
+        pencil.fillStyle = 'black'
+        pencil.fillRect(0, 0, fieldSize[0], fieldSize[1])
+        pencil.fill()
+      }
+
+      function createBall() {
+        pencil.fillStyle = 'white'
+        pencil.beginPath()
+        pencil.arc(ballCoordenateX, ballCoordenateY, ballSize, 0, 2 * 3.14)
+        pencil.fill()
+      }
+
+      function createPlayerOne() {
+        pencil.fillStyle = 'white'
+        pencil.fillRect(
+          playerOneCoordinateX,
+          playerOneCoordinateY,
+          playerOneSizeX,
+          playerOneSizeY
+        )
+        pencil.fill()
+      }
+
+      function createPlayerTwo() {
+        pencil.fillStyle = 'white'
+        pencil.fillRect(
+          playerTwoCoordinateX,
+          playerTwoCoordinateY,
+          playerTwoSizeX,
+          playerTwoSizeY
+        )
+        pencil.fill()
+      }
+
+      // PLAYER MOVMENT
+      function keyboardInput(key) {
+        input = key.keyCode
+        updateNeeded = true
+      }
+
+      function clearScreen() {
+        pencil.fillStyle = 'black'
+        pencil.fillRect(
+          playerOneCoordinateX,
+          playerOneCoordinateY,
+          playerOneSizeX,
+          playerOneSizeY
+        )
+      }
+
+      function clearScreen2() {
+        pencil.fillStyle = 'black'
+        pencil.fillRect(
+          playerTwoCoordinateX,
+          playerTwoCoordinateY,
+          playerTwoSizeX,
+          playerTwoSizeY
+        )
+      }
+
+      function clearScreenBall() {
+        pencil.fillStyle = 'black'
+
+        pencil.beginPath()
+        pencil.arc(
+          ballCoordenateX,
+          ballCoordenateY,
+          ballSize * 2.5,
+          0,
+          2 * 3.14
+        )
+        pencil.fill()
+      }
+
+      function movePlayerOne() {
+        if (updateNeeded == true) {
+          clearScreen()
+          if (input == keyboardUp) {
+            playerOneCoordinateY = playerOneCoordinateY - 30
+            if (playerOneCoordinateY <= 0) {
+              playerOneCoordinateY = 0
+            }
+
+            createPlayerOne()
+            updateNeeded = false
+          }
+          if (input == keyboardDown) {
+            playerOneCoordinateY = playerOneCoordinateY + 30
+            if (playerOneCoordinateY >= fieldSize[1] - playerOneSizeY) {
+              playerOneCoordinateY = fieldSize[1] - playerOneSizeY
+            }
+
+            createPlayerOne()
+            updateNeeded = false
+          }
+        }
+      }
+
+      function refreshPlayers() {
+        //oponentMovement()
+        createPlayerOne()
+        createPlayerTwo()
+        createBall()
+      }
+
+      // BALL MOVMENT
+
+      function moveBall() {
+        clearScreenBall()
+        //colision with upper and lower borders
+        if (ballCoordenateY <= 5 || ballCoordenateY >= 395) {
+          incrementY = incrementY * -1
+
+          createBall()
+          refreshPlayers()
+        }
+        // colision with goal and score
+        if (ballCoordenateX <= 0 || ballCoordenateX >= 800) {
+          if (ballCoordenateX <= 0) {
+            scorePlayerTwo = scorePlayerTwo + 1
+            startGame = true
+            alert(`Player1: ${scorePlayerOne} Player2 ${scorePlayerTwo}`)
+            createNewGame()
+          }
+          if (ballCoordenateX >= 800) {
+            scorePlayerOne = scorePlayerOne + 1
+            startGame = true
+            alert(
+              `Player1: ${scorePlayerOne}              Player2: ${scorePlayerTwo}`
+            )
+            createNewGame()
+          }
+          if (scorePlayerTwo || scorePlayerOne == 5) {
+            if (scorePlayerTwo == 5) {
+              alert('PLAYER TWO WINS!')
+              scorePlayerOne = 0
+              scorePlayerTwo = 0
+              createNewGame()
+            }
+            if (scorePlayerOne == 5) {
+              alert('PLAYER ONE WINS!')
+              scorePlayerOne = 0
+              scorePlayerTwo = 0
+              createNewGame()
+            }
+          }
+
+          createNewGame()
+        }
+
+        //move ball
+
+        if (leftToRight == true && topToBotton == true) {
+          ballCoordenateX = ballCoordenateX + incrementX
+          ballCoordenateY = ballCoordenateY + incrementY
+          createBall()
+          refreshPlayers()
+        }
+        if (leftToRight == true && topToBotton == false) {
+          ballCoordenateX = ballCoordenateX + incrementX
+          ballCoordenateY = ballCoordenateY - incrementY
+          createBall()
+          refreshPlayers()
+        }
+        if (leftToRight == false && topToBotton == false) {
+          ballCoordenateX = ballCoordenateX - incrementX
+          ballCoordenateY = ballCoordenateY - incrementY
+          createBall()
+          refreshPlayers()
+        }
+        if (leftToRight == false && topToBotton == true) {
+          ballCoordenateX = ballCoordenateX - incrementX
+          ballCoordenateY = ballCoordenateY + incrementY
+          createBall()
+          refreshPlayers()
+        }
+
+        //colision with players
+        //player one
+        if (
+          ballCoordenateX - ballSize < playerOneCoordinateX + 10 &&
+          ballCoordenateX - ballSize > playerOneCoordinateX &&
+          ballCoordenateY > playerOneCoordinateY &&
+          ballCoordenateY < playerOneCoordinateY + playerOneSizeY
+        ) {
+          incrementX = parseInt(Math.round(Math.random() * ballSpeedX + 1))
+          incrementY = parseInt(Math.round(Math.random() * ballSpeedY + 1))
+          random = parseInt(Math.round(Math.random()))
+          if (random == 0) {
+            incrementY = incrementY * -1
+            createBall()
+            refreshPlayers()
+          } else {
+            createBall()
+            refreshPlayers()
+          }
+        }
+
+        // player two
+        if (
+          ballCoordenateX > playerTwoCoordinateX &&
+          ballCoordenateX < playerTwoCoordinateX + 10 &&
+          ballCoordenateY > playerTwoCoordinateY &&
+          ballCoordenateY < playerTwoCoordinateY + playerTwoSizeY
+        ) {
+          incrementX = parseInt(Math.round(Math.random() * ballSpeedX + 1) * -1)
+          incrementY = parseInt(Math.round(Math.random() * ballSpeedY + 1))
+          random = parseInt(Math.round(Math.random()))
+          if (random == 0) {
+            incrementY = incrementY * -1
+            createBall()
+            refreshPlayers()
+          } else {
+            createBall()
+            refreshPlayers()
+          }
+        }
+        if (incrementY == 0 || incrementX == 0) {
+          incrementY = parseInt(Math.round(Math.random() * ballSpeedX) + 1)
+          incrementX = parseInt(Math.round(Math.random() * ballSpeedY) + 1)
+          random = parseInt(Math.round(Math.random()))
+          if (random == 0) {
+            incrementY = incrementX * -1
+            createBall()
+            refreshPlayers()
+          } else {
+            createBall()
+            refreshPlayers()
+          }
+        }
+        console.log(incrementY, incrementX)
+      }
+      // OPONENT MOVEMENT AND DIFICULTY
+      function oponentMovement() {
+        clearScreen2()
+        if (leftToRight == true) {
+          playerTwoCoordinateY = parseInt(
+            Math.round(Math.random() * 75 + ballCoordenateY / 2)
+          )
+          if (playerTwoCoordinateY >= fieldSize[1] - playerTwoSizeY) {
+            playerTwoCoordinateY = fieldSize[1] - playerTwoSizeY
+          }
+          if (playerTwoCoordinateY <= 0) {
+            playerTwoCoordinateY = 0
+          }
+        }
+        createPlayerTwo()
+      }
+
+      createNewGame()
+      document.onkeydown = keyboardInput
+      setInterval(movePlayerOne, 1)
+      setInterval(moveBall, 10)
+      setInterval(oponentMovement, 400)
+    </script>
+  </body>
+</html>

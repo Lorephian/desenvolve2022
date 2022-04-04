@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let road
+      const lane = [40, 95, 150, 210, 262, 320]
+
+      let actor
+      var actorPositionY = 366
+      var actorPositionX = 100
+
+      var playerScore = 0
+
+      var carX = [
+        450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, 450, -50, -50,
+        -50, -50, -50, -50, -50, -50, -50, 450, 450, 450, 450, 450, 450, 450,
+        450, 450, 450, 450, 450, -50, -50, -50, -50, -50, -50, -50, -50, -50
+      ]
+      var carY = [
+        40, 95, 150, 210, 262, 320, 40, 95, 150, 210, 262, 320, 40, 95, 150,
+        210, 262, 320, 40, 95, 150, 210, 262, 320, 40, 95, 150, 210, 262, 320,
+        40, 95, 150, 210, 262, 320, 40, 95, 150, 210, 262, 320, 40, 95, 150,
+        210, 262, 320
+      ]
+      var randomCar = [
+        0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5,
+        0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5
+      ]
+      var randomSpeed = [
+        0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2,
+        0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2
+      ]
+      var laneIndex = [
+        0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5,
+        0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5
+      ]
+
+      const startPositionLeft = -250
+      const startPositionRight = 650
+
+      let car = []
+      var trafic = true
+      var numberOfCars = 20 //max 44
+      var createNewCar = true
+
+      const carSpeed = [2, 3, 4]
+      const actorSpeed = 25 //48.5
+
+      const keyboardUp = 38
+      const keyboardDown = 40
+      const keyboardLeft = 37
+      const keyboardRight = 39
+      var input = null
+
+      let trackSound
+      let crashSound
+      let scoredSound
+
+      function preload() {
+        road = loadImage('Images/road.png')
+        actor = loadImage('Images/actor.png')
+        car[0] = loadImage('Images/car1.png')
+        car[1] = loadImage('Images/car2.png')
+        car[2] = loadImage('Images/car3.png')
+        car[3] = loadImage('Images/car1r.png')
+        car[4] = loadImage('Images/car2r.png')
+        car[5] = loadImage('Images/car3r.png')
+        trackSound = loadSound('Sounds/track.mp3')
+        crashSound = loadSound('Sounds/crash.mp3')
+        scoredSound = loadSound('Sounds/scored.wav')
+      }
+
+      function setup() {
+        createCanvas(500, 400)
+        trackSound.loop()
+      }
+
+      function draw() {
+        background(road)
+
+        for (i = 0; i < numberOfCars; i++) {
+          spawnCar(i)
+          if (i == numberOfCars) {
+            i = 0
+          }
+        }
+        score()
+        addScore()
+        avoidColision()
+        actorMovement()
+        image(actor, actorPositionX, actorPositionY, 30, 30)
+        cowColision()
+      }
+
+      //player movement
+      function keyboardInput(key) {
+        input = key.keyCode
+      }
+
+      function actorMovement() {
+        console.log(input)
+        if (input != null) {
+          if (input == keyboardUp) {
+            actorPositionY = actorPositionY - actorSpeed
+
+            input = null
+          }
+          if (input == keyboardDown) {
+            actorPositionY = actorPositionY + actorSpeed
+
+            input = null
+          }
+          if (input == keyboardLeft) {
+            actorPositionX = actorPositionX - actorSpeed
+
+            input = null
+          }
+          if (input == keyboardRight) {
+            actorPositionX = actorPositionX + actorSpeed
+
+            input = null
+          }
+        }
+        image(actor, actorPositionX, actorPositionY, 30, 30)
+      }
+
+      function getRandomIntInclusive(min, max) {
+        min = Math.ceil(min)
+        max = Math.floor(max)
+        return Math.floor(Math.random() * (max - min + 1)) + min
+      }
+
+      function spawnCar(x) {
+        function carMovement() {
+          if (carY[x] > 200) {
+            carX[x] = carX[x] + carSpeed[randomSpeed[x]]
+            image(car[randomCar[x]], carX[x], carY[x], 50, 40)
+          }
+          if (carY[x] < 200) {
+            carX[x] = carX[x] - carSpeed[randomSpeed[x]]
+            image(car[randomCar[x]], carX[x], carY[x], 50, 40)
+          }
+        }
+
+        if (carX[x] > startPositionRight && carY[x] > 200) {
+          laneIndex[x] = parseInt(Math.round(Math.random() * 5))
+          randomSpeed[x] = parseInt(Math.round(Math.random() * 2))
+          carY[x] = lane[laneIndex[x]]
+          if (carY[x] > 200) {
+            randomCar[x] = getRandomIntInclusive(3, 5)
+            carX[x] = startPositionLeft
+          }
+          if (carY[x] < 200) {
+            randomCar[x] = getRandomIntInclusive(0, 2)
+            carX[x] = startPositionRight
+          }
+        }
+
+        if (carX[x] < startPositionLeft && carY[x] < 200) {
+          laneIndex[x] = parseInt(Math.round(Math.random() * 5))
+
+          randomSpeed[x] = parseInt(Math.round(Math.random() * 2))
+          carY[x] = lane[laneIndex[x]]
+          if (carY[x] > 200) {
+            randomCar[x] = getRandomIntInclusive(3, 5)
+            carX[x] = startPositionLeft
+          }
+          if (carY[x] < 200) {
+            randomCar[x] = getRandomIntInclusive(0, 2)
+            carX[x] = startPositionRight
+          }
+        }
+
+        carMovement()
+      }
+
+      function avoidColision() {
+        for (i = 0; i < numberOfCars; i++) {
+          for (i2 = 0; i2 < numberOfCars; i2++) {
+            if (i != i2) {
+              if (
+                carX[i] >= carX[i2] &&
+                carX[i] <= carX[i2] + 55 &&
+                carY[i] == carY[i2]
+              ) {
+                carX[i] = carX[i2] + 55
+              }
+            }
+          }
+        }
+      }
+
+      function cowColision() {
+        for (i = 0; i < numberOfCars; i++) {
+          if (
+            actorPositionX <= carX[i] + 50 &&
+            actorPositionX + 30 >= carX[i] &&
+            actorPositionY + 30 >= carY[i] &&
+            actorPositionY <= carY[i] + 40
+          ) {
+            crashSound.play()
+            alert(`Oh no, you're dead! | SCORE: ${playerScore} |`)
+            actorPositionY = 366
+            actorPositionX = 100
+            playerScore = 0
+            i = 0
+          }
+        }
+      }
+
+      function score() {
+        if (actorPositionY <= 30) {
+          scoredSound.play()
+          playerScore = playerScore + 10
+
+          //alert(`You did it! | SCORE: ${playerScore} |`)
+          actorPositionY = 366
+          actorPositionX = 100
+        }
+      }
+
+      function addScore() {
+        textAlign(CENTER)
+        textSize(25)
+        fill(color(255, 240, 60))
+        text('SCORE:' + playerScore, width / 5, 27)
+      }
+
+      // +45 pixels for each top lane, starting at 40 for Y axis
+      // + 45 pixels for each botton lane, starting at 210 for Y axis
+      // side walks | TOP 0 >< 30 | BOTTON 366 >< 400 |
+
+      document.onkeydown = keyboardInput
+    </script>
+  </body>
+</html>
