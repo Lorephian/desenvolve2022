@@ -1,8 +1,3 @@
-# ⚠️ Importante
-Por algum motivo, as vezes, ao carregar o site na plataforma [CodeSandbox](https://codesandbox.io/) o JS do `scrollReveal` buga e não revela da forma apropriada. Para resolver o problema basta **ATUALIZAR A PAGINA** que ele roda normalmente. 
-
-> No liveServer do Visual Studio Code isso não ocorre. Apenas identifiquei ao utilizar a plataforma do codesandbox. Abrindo normalmente pelo navegador o erro também não ocorre.
-
 # ❓ Sobre o Desafio
 
 **Ao clicar no botão de envio, a página deve exibir uma das seguintes mensagens:**
@@ -21,7 +16,7 @@ Por algum motivo, as vezes, ao carregar o site na plataforma [CodeSandbox](https
 
 Optei por fazer uma validação diferente da proposta pois nem sempre os emails terminam em `.com`.
 
-Tambem alterei para a mensagem não utilizar o campo `user` do email, uma vez que um email `contato@domain.com.br` retornaria a mensagem *"obrigado contato, contato!"*.
+Tambem alterei para a mensagem não utilizar o campo `user` do email, uma vez que um email `contato@domain.com.br` retornaria a mensagem *"obrigado pelo contato, contato!"*.
 
 > Caso fosse obrigatório manter este padrão, utilizaria o seguinte código JS que segue o padrão da página funcional de exemplo.
 
