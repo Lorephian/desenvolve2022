@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const instance = require('../../database')
 
 const columns = {
-    empresa: {
+    company: {
         type: Sequelize.STRING,
         allowNull: false
     },
@@ -10,19 +10,19 @@ const columns = {
         type: Sequelize.STRING,
         allowNull: false
     },
-    categoria: {
-        type: Sequelize.ENUM('ração', 'brinquedos'),
+    category: {
+        type: Sequelize.ENUM('rations', 'toys'),
         allowNull: false
     }
 }
 
 const options = {
     freezeTableName: true,
-    tableName: 'fornecedores',
+    tableName: 'suppliers',
     timestamps: true,
-    createdAt: 'dataCriacao',
-    updatedAt: 'dataAtualizacao',
-    version: 'versao'
+    createdAt: 'creationDate',
+    updatedAt: 'updateDate',
+    version: 'version'
 }
 
-module.exports = instance.define('fornecedor', columns, options)
+module.exports = instance.define('supplier', columns, options)
