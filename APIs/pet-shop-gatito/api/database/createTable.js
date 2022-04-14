@@ -1,6 +1,13 @@
-const TableModel = require('../routes/suppliers/SupplierModelTable')
+const models = [
+    require('../routes/suppliers/SupplierModelTable'),
+    require('../routes/suppliers/products/ProductsModelTable')
+]
 
-TableModel
-    .sync()
-    .then(() => console.log('Tabela criada com sucesso'))
-    .catch(console.log)
+async function createTables () {
+    for (i=0; i<models.length; i++){
+        const model = models[i]
+        await model.sync()
+    }
+}
+
+createTables()
