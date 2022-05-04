@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
 const Class = sequelize.define('Classes',  {
   starting_date: DataTypes.DATEONLY
-}, {})
+}, {paranoid: true})
 Class.associate = function(models) {
   Class.hasMany(models.Registrations, {
     foreignKey: 'class_id'
