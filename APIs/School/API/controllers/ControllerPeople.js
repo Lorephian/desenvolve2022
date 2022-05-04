@@ -79,13 +79,20 @@ class ControllerPeople {
     }
 
     static async updateRegistration(req, res) {
-        const {id} = req.params
+        const {studentId, registrationId} = req.params
         const newInfos = req.body
         try {
-            await database.Registrations.update(newInfos, {where: {id:Number(id)}})
-            const updatedRegistration = await database.Registrations.findOne({where: {id: Number(id)}})
+            await database.Registrations.update(newInfos, {where: {
+                id:Number(registrationId),
+                student_id:Number(studentId)
+            }
+        })
+            const UpdatedRegistration = await database.Registrations.findOne({where: 
+                {
+                    id: Number(id)
+                }})
             return res.status(200).json(updatedRegistration)
-        } catch (error) {
+          } catch (error) {
             return res.status(500).json(error.message)
         }
     }
@@ -95,6 +102,17 @@ class ControllerPeople {
         try {
             await database.Registrations.destroy({where: {id: Number(id)}})
             return res.status(200).json({message: `id ${id} deleted`})
+        } catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
+
+    static async deleteRegistration(req, res) {
+        const {studentId, registrationId} = req.params
+        const newInfos = req.body
+        try {
+            await database.Registrations.destroy({where: {id: Number(registrationId)}})
+            return res.status(200).json({message: `id ${registrationId} deleted`})
         } catch (error) {
             return res.status(500).json(error.message)
         }
