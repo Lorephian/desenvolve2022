@@ -1,11 +1,11 @@
 const { Router } = require('express')
-const ControllerClasses = require('../controllers/ControllerClasses')
+const ControllerClasses = require('../controllers/controllerClasses')
 
 const router = Router()
 router
- .get('/turmas', ControllerClasses.pegaTodasAsTurmas)
- .get('/turmas/:id', ControllerClasses.pegaUmaTurma)
- .post('/turmas', ControllerClasses.criaTurma)
- .put('/turmas/:id', ControllerClasses.atualizaTurma)
- .delete('/turmas/:id', ControllerClasses.apagaTurma)
+ .get('/classes', ControllerClasses.catchAllClasses)
+ .get('/classes/:id', ControllerClasses.catchOneClass)
+ .post('/classes', ControllerClasses.createClass)
+ .put('/classes/:id', ControllerClasses.updateClass)
+ .delete('/classes/:id', ControllerClasses.deleteClass)
 module.exports = router

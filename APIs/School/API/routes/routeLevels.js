@@ -6,7 +6,7 @@ const ControllerLevels = require('../controllers/controllerLevels')
 const router = Router()
 router
  .get('/levels', ControllerLevels.catchAllLevels)
- .get('/levels/:id', ControllerLevels.cathcOneLevel)
+ .get('/levels/:id', ControllerLevels.catchOneLevel)
  .post('/levels', ControllerLevels.createLevel)
  .put('/levels/:id', ControllerLevels.updateLevel)
  .delete('/levels/:id', ControllerLevels.deleteLevel)
