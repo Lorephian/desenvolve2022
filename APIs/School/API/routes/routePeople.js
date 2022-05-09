@@ -12,4 +12,5 @@ router.get('/people/:studentId/registration/:registrationId', ControllerPeople.c
 router.post('/people/:studentId/registration', ControllerPeople.createRegistration)
 router.put('/people/:studentId/registration/:registrationId', ControllerPeople.updateRegistration)
 router.delete('/people/:studentId/registration/:registrationId', ControllerPeople.deleteRegistration)
+router.post('/people/:id/restore', ControllerPeople.restorePerson)
 module.exports = router
