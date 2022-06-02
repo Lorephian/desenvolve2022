@@ -1,9 +1,23 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const People = sequelize.define('People', {
-    name: DataTypes.STRING,
+    name: {type: DataTypes.STRING,
+    validate: {
+      validatorFunction: function(data) {
+        if (data.length < 3 ) throw new Error('field name must contain more than 3 characters')
+      }
+    }
+    },
     active: DataTypes.BOOLEAN,
-    email: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: {
+          args: true,
+          msg: 'invalid e-mail data'
+        }
+      }
+    },
     role: DataTypes.STRING
   }, { 
     paranoid: true,
