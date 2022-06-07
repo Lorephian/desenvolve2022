@@ -1,4 +1,5 @@
 const database = require('../models')
+const Sequelize = require('sequelize')
 
 class ControllerPeople {
     static async catchAllPeople(req, res){
@@ -126,7 +127,7 @@ class ControllerPeople {
         }
     }
 
-    static async deleteRegistration(req, res) {
+    static async deleteOneRegistration(req, res) {
         const {studentId, registrationId} = req.params
         const newInfos = req.body
         try {
@@ -136,6 +137,57 @@ class ControllerPeople {
             return res.status(500).json(error.message)
         }
     }
+    static async catchRegistration(req, res) {
+        const {studentId} = req.params
+        try {
+            const person = await database.People.findOne({where: { id: Number(studentId)}})
+            const registrations = await person.getRegisteredClasses()
+            return res.status(200).json(registrations)
+
+
+        } catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
+
+    static async catchRegistrationByClass(req, res) {
+        const {classId} = req.params
+        try {
+           const allRegistrations = await database.Registrations.findAndCountAll(
+               { where: {
+               class_id: Number(classId),
+               status: 'confirmed' 
+            },
+            limit: 20,
+            order: [['student_id', 'ASC']]
+        })
+        return res.status(200).json(allRegistrations)
+        } 
+
+        catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
+
+    static async catchFullClasses(req, res) {
+        const {classLimit} = 4
+        try {
+           const fullClasses = await database.Registrations.findAndCountAll({
+               where: {
+                   status: 'confirmed'
+               },
+               attributes: ['class_id'],
+               group: ['class_id'],
+               having: Sequelize.literal(`count(class_id) >= ${classLimit}`)
+           })
+
+        return res.status(200).json(fullClasses.count)
+
+        } catch (error) {
+            return res.status(500).json(error.message)
+        }
+    }
+
 }
 
 
