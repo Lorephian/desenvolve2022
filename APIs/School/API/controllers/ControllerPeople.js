@@ -1,5 +1,7 @@
 const database = require('../models')
 const Sequelize = require('sequelize')
+const Services = require('../services/Services')
+const peopleServices = new Services('People')
 
 class ControllerPeople {
     static async catchAllPeople(req, res){
@@ -13,7 +15,7 @@ class ControllerPeople {
 
     static async catchActivePeople(req, res){
         try {
-            const activePeople = await database.People.findAll()
+            const activePeople = await peopleServices.catchAllRegistrations()
             return res.status(200).json(activePeople)
         } catch (error) {
             return res.status(500).json(error.message)
@@ -191,11 +193,14 @@ class ControllerPeople {
     static async cancelPerson(req, res) {
         const { studentId } = req.params
         try {
-          await database.People.update({ active: false }, { where: {id: Number(studentId)} })
-         
-          await database.Registrations.update({ status: canceled }, { where: {student_id: Number(studentId)} })
-          
-          return res.status(200).json({ message: `Student ${studentId} registrations canceled` })
+            database.sequelize.transaction(async transaction => {
+
+                await database.People.update({ active: false }, { where: {id: Number(studentId)} }, { transaction: transaction })
+               
+                await database.Registrations.update({ status: canceled }, { where: {student_id: Number(studentId)} }, { transaction: transaction })
+                
+                return res.status(200).json({ message: `Student ${studentId} registrations canceled` })
+            })
         
         } catch (error) {
             return res.status(500).json(error.message)
