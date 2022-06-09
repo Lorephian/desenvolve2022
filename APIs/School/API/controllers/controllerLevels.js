@@ -1,8 +1,13 @@
+const database = require('../models')
+
+const Services = require('../services/Services')
+const levelsServices = new Services('Levels')
+
 class ControllerLevels {
 
     static async catchAllLevels(req, res) {
       try {
-        const allLevels = await database.Levels.findAll()
+        const allLevels = await levelsServices.catchAllRegistrations()
         return res.status(200).json(allLevels)
       } catch (error) {
         return res.status(500).json(error.message);

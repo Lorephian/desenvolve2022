@@ -10,6 +10,22 @@ class Services {
 
     }
 
+    async catchOneRegistration(id) {
+
+    }
+
+    async createRegistration(data) {
+
+    }
+
+    async updateRegistration(updatedData, id) {
+
+    }
+
+    async deleteRegistration(id) {
+        
+    }
+
 }
 
 module.exports = Services
