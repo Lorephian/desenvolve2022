@@ -6,19 +6,20 @@ const { PeopleServices } = require('../services')
 const peopleServices = new PeopleServices()
 
 class ControllerPeople {
-    static async catchAllPeople(req, res){
+
+    static async catchActivePeople(req, res){
         try {
-            const allPeople = await database.People.scope('all').findAll()
-            return res.status(200).json(allPeople)
+            const activePeople = await peopleServices.catchActiveRegistrations()
+            return res.status(200).json(activePeople)
         } catch (error) {
             return res.status(500).json(error.message)
         }
     }
 
-    static async catchActivePeople(req, res){
+    static async catchAllPeople(req, res){
         try {
-            const activePeople = await peopleServices.catchAllRegistrations()
-            return res.status(200).json(activePeople)
+            const allPeople = await peopleServices.catchAllRegistrations()
+            return res.status(200).json(allPeople)
         } catch (error) {
             return res.status(500).json(error.message)
         }
@@ -195,14 +196,9 @@ class ControllerPeople {
     static async cancelPerson(req, res) {
         const { studentId } = req.params
         try {
-            database.sequelize.transaction(async transaction => {
-
-                await database.People.update({ active: false }, { where: {id: Number(studentId)} }, { transaction: transaction })
-               
-                await database.Registrations.update({ status: canceled }, { where: {student_id: Number(studentId)} }, { transaction: transaction })
-                
-                return res.status(200).json({ message: `Student ${studentId} registrations canceled` })
-            })
+            await peopleServices.cancelPersonAndRegistrations(Number(studentId))
+            return res.status(200).json({ message: `Student ${studentId} registrations canceled` })
+            
         
         } catch (error) {
             return res.status(500).json(error.message)

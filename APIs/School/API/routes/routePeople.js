@@ -4,7 +4,7 @@ const ControllerPeople = require('../controllers/ControllerPeople')
 const router = Router()
 
 router.get('/people/all', ControllerPeople.catchAllPeople)
-router.get('/people', ControllerPeople.catchActivePeople)
+router.get('/people/active', ControllerPeople.catchActivePeople)
 router.get('/people/:id', ControllerPeople.catchOnePerson)
 router.get('/people/:studentId/registration/:registrationId', ControllerPeople.catchOneRegistration)
 router.get('/people/studentId:/registration', ControllerPeople.catchOneRegistration)
