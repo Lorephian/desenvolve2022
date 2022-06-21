@@ -10,8 +10,8 @@ const BotaoConclui = () => {
 
 }
 
-const concluirTarefa = (evento) => {
-    const botaoConclui = evento.target
+const concluirTarefa = (event) => {
+    const botaoConclui = event.target
 
     const tarefaCompleta = botaoConclui.parentElement
 

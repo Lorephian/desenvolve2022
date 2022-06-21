@@ -7,8 +7,8 @@ const BotaoDeleta = () => {
     return botaoDeleta
 }
 
-const deletarTarefa = (evento) => { 
-    const botaoDeleta = evento.target
+const deletarTarefa = (event) => { 
+    const botaoDeleta = event.target
     
     const tarefaCompleta = botaoDeleta.parentElement
 

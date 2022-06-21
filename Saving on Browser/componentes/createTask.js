@@ -9,7 +9,6 @@ import BotaoDeleta from './deletaTarefa.js'
         event.preventDefault()
 
         const tasks = JSON.parse(localStorage.getItem('tasks')) || []
-
         
         const input = document.querySelector('[data-form-input]')
         const valor = input.value
@@ -17,7 +16,7 @@ import BotaoDeleta from './deletaTarefa.js'
         const calendar = document.querySelector('[data-form-date]')
         const date = moment(calendar.value)
     
-        const formatedDate =  date.format('DD/MM/YYYY')
+        const formatedDate = date.format('DD/MM/YYYY')
 
         const data = {
             valor,
@@ -36,16 +35,16 @@ import BotaoDeleta from './deletaTarefa.js'
 
     export const Task = ( { valor, formatedDate } ) => {
 
-    const tarefa = document.createElement('li')
-    tarefa.classList.add('task')
-    const conteudo = `<p class="content">${formatedDate} * ${valor}</p>`
+    const task = document.createElement('li')
+    task.classList.add('task')
+    const content = `<p class="content">${formatedDate} * ${valor}</p>`
 
-    tarefa.innerHTML = conteudo
+    task.innerHTML = content
 
-    tarefa.appendChild(BotaoConclui())
-    tarefa.appendChild(BotaoDeleta())
+    task.appendChild(BotaoConclui())
+    task.appendChild(BotaoDeleta())
    
-    return tarefa
+    return task
 
 }
 
