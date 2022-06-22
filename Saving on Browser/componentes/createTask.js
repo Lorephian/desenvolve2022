@@ -17,10 +17,11 @@ import BotaoDeleta from './deletaTarefa.js'
         const date = moment(calendar.value)
     
         const formatedDate = date.format('DD/MM/YYYY')
-
+        const finished = false
         const data = {
             valor,
-            formatedDate
+            formatedDate,
+            finished
         }
 
         const updatedTasks = [...tasks, data]
@@ -33,12 +34,16 @@ import BotaoDeleta from './deletaTarefa.js'
 
     }
 
-    export const Task = ( { valor, formatedDate } ) => {
+    export const Task = ( { valor, formatedDate, finished } ) => {
 
     const task = document.createElement('li')
-    task.classList.add('task')
+    
     const content = `<p class="content">${formatedDate} * ${valor}</p>`
+    if(finished){
+        task.classList.add('done')
+    }
 
+    task.classList.add('task')
     task.innerHTML = content
 
     task.appendChild(BotaoConclui())
