@@ -15,12 +15,14 @@ import BotaoDeleta from './deletaTarefa.js'
     
         const calendar = document.querySelector('[data-form-date]')
         const date = moment(calendar.value)
+        const time = date.format('HH:MM')
     
         const formatedDate = date.format('DD/MM/YYYY')
         const finished = false
         const data = {
             valor,
             formatedDate,
+            time,
             finished
         }
 
@@ -34,11 +36,11 @@ import BotaoDeleta from './deletaTarefa.js'
 
     }
 
-    export const Task = ( { valor, formatedDate, finished } ) => {
+    export const Task = ( { valor, time, finished }, id ) => {
 
     const task = document.createElement('li')
     
-    const content = `<p class="content">${formatedDate} * ${valor}</p>`
+    const content = `<p class="content">${time} * ${valor}</p>`
     if(finished){
         task.classList.add('done')
     }
@@ -46,8 +48,8 @@ import BotaoDeleta from './deletaTarefa.js'
     task.classList.add('task')
     task.innerHTML = content
 
-    task.appendChild(BotaoConclui())
-    task.appendChild(BotaoDeleta())
+    task.appendChild(BotaoConclui(loadTasks, id))
+    task.appendChild(BotaoDeleta(loadTasks, id))
    
     return task
 

@@ -8,7 +8,7 @@ const concluirTarefa = (update, id) => {
     update()
  }
 
-const BotaoConclui = () => { 
+const BotaoConclui = (update, id) => { 
     const botaoConclui = document.createElement('button')  
     
     botaoConclui.classList.add('check-button')
