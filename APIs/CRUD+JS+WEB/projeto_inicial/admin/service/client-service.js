@@ -21,27 +21,13 @@ const content = `<td class="td" data-td>${nome}</td>
 const table = document.querySelector('[data-tabela]')
 
 const clientList = () => {
-    
-    const promise = new Promise((resolve, reject) => {
-        const http = new XMLHttpRequest()
-
-        http.open('GET', 'http://localhost:3000/profile')
-                
-        http.onload = () => {
-            if (http.status >= 400) {
-                reject(JSON.parse(http.response))
-            } else {
-                resolve(JSON.parse(http.response))
-            }
-        }
-
-        http.send()
-
+    return fetch(`http://localhost:3000/profile`)
+    .then(answer => {
+        return answer.json()
     })
+
+    }
     
-    return promise
- 
-}
 
 clientList().then(data => {
     
